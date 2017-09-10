@@ -3,41 +3,64 @@ package org.mitio.game;
 import org.apache.commons.cli.*;
 import org.mitio.game.blackjack.BlackJack;
 import org.mitio.game.blackjack.dto.Cards;
-import org.mitio.game.blackjack.dto.Deck;
-import org.mitio.game.blackjack.utils.CsvDeckParser;
+import org.mitio.game.blackjack.dto.GameState;
+import org.mitio.game.blackjack.dto.Player;
+import org.mitio.game.blackjack.util.CsvCardsParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.File;
+import java.util.UUID;
 
 
 public class BlackJackApp {
 
-    private static final Logger _logger = LoggerFactory.getLogger(BlackJackApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(BlackJackApp.class);
 
 
     public static void main(String[] args) throws ParseException {
 
-
+        printWelcomeScreen();
         Options options = buildCommandLineOptions();
         CommandLineParser parser = new DefaultParser();
         CommandLine cmdLine = parser.parse(options, args);
 
-        Deck deck = null;
         if (cmdLine.hasOption("help")) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("Black Jack", options);
             return;
-        }else if(cmdLine.hasOption("deck")){
-            File deckFile = new File(cmdLine.getOptionValue("deck"));
-            _logger.info("loading black jack with deck file: " + deckFile.getName());
-            CsvDeckParser csvDeckParser = new CsvDeckParser();
-            deck = csvDeckParser.parse(deckFile);
         }
 
-        printWelcomeScreen();
-        BlackJack blackJack = new BlackJack(deck);
+
+        BlackJack blackJack = new BlackJack();
+        Cards cards;
+        if(cmdLine.hasOption("deck")){
+            File deckFile = new File(cmdLine.getOptionValue("deck"));
+            logger.info("loading black jack with deck file: " + deckFile.getName());
+            CsvCardsParser csvCardsParser = new CsvCardsParser();
+            cards = csvCardsParser.parse(deckFile);
+            blackJack.loadCards(cards);
+        }
+
+        final UUID player1Uuid = blackJack.addPlayer("Sam");
+        logger.info("player1uuid: " + player1Uuid);
+
+
+        // Start game
+        // 1) get cards while user is done
+        // 2) let Dealer cards
+
+        while(!blackJack.gameFinished()){
+
+
+            //player1Uuid.takeTurn
+
+            logger.info("asdfasdf");
+        }
+
+        // TODO: blackJack.getScore();
 
     }
+
 
     private static void printWelcomeScreen(){
         final String welcomeMsg =
@@ -46,7 +69,7 @@ public class BlackJackApp {
                 "\n |    |  _/  | \\__  \\ _/ ___\\|  |/ /     |    \\__  \\ _/ ___\\|  |/ /" +
                 "\n |    |   \\  |__/ __ \\  \\___ |    <  /\\__|    |/ __ \\  \\___|    < " +
                 "\n |______  /____(____  /\\___  >__|_ \\ \\________(____  /\\___  >__|_ \\" +
-                "\n        \\/          \\/     \\/     \\/               \\/     \\/     \\/   by miti0\n\n";
+                "\n        \\/          \\/     \\/     \\/               \\/     \\/     \\/ \n\n";
 
         System.out.println(welcomeMsg);
     }

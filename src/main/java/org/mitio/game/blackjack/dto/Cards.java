@@ -1,15 +1,20 @@
 package org.mitio.game.blackjack.dto;
 
-import java.util.ArrayList;
+import java.util.ArrayDeque;
+
 
 public class Cards {
 
-    public Cards(){
+    private ArrayDeque<Card> cards = new ArrayDeque<Card>();
 
+
+    public Card getNext(){
+        if(cards.isEmpty())
+            return null;
+        else return cards.pop();
     }
 
-    private ArrayList<Card> cards = new ArrayList<Card>();
-
-
-
+    public boolean isEmpty() {
+        return cards.isEmpty();
+    }
 }
