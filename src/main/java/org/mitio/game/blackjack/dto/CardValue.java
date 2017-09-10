@@ -4,14 +4,14 @@ public class CardValue {
 
     private int value;
     private String code;
-    private String name;
 
     public CardValue(final int value,
-                     final String code,
-                     final String name) {
+                     final String code) {
         this.value = value;
         this.code = code;
-        this.name = name;
     }
 
+
+    public int getValue() { return value; }
+    public String getCode() { return code; }
 }

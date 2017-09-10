@@ -1,6 +1,8 @@
 package org.mitio.game.blackjack;
 
 import org.mitio.game.blackjack.dto.*;
+import org.mitio.game.blackjack.table.Deck;
+import org.mitio.game.blackjack.table.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
@@ -23,52 +25,29 @@ public class BlackJack {
 
     public BlackJack(){
         dealer = new Dealer(dealersName);
+        dealer.addCard(deck.getNext());
+        dealer.addCard(deck.getNext());
     }
 
-    public UUID addPlayer(final String playersName){
+    public Player addPlayer(final String playersName){
         Player newPlayer = new Player(playersName);
+        newPlayer.addCard(deck.getNext());
+        newPlayer.addCard(deck.getNext());
 
         players.put(newPlayer.getUuid(), newPlayer);
-        logger.info("Welcome " + playersName + ", hope your luck will have no limits today.");
-        return newPlayer.getUuid();
+
+        return newPlayer;
     }
 
-
-
-
-
-    public Card getCard(final UUID playerId){
-
-        final Card card = deck.getNext();
-
-        return card;
-
-    }
-
-
-    public void loadCards(final Cards cards){
+    public void setCards(final Cards cards){
         deck = new Deck(cards);
-
     }
 
-    public void shuffleDeck(){
-        deck.shuffle();
+    public Card handOutCardToUser(final UUID uuid) {
+        final Card card = deck.getNext();
+        players.get(uuid).addCard(card);
+        return card;
     }
-
-
-    public GameState getGameState() { return gameState; }
-    //public void getCard()
-
-
-    public GameState evaluateGame() {
-        logger.info("Evaluating,...");
-
-        // If not more cards, game is finished
-
-        //TODO: evaluate game
-        return GameState.RUNNING;
-    }
-
 
     public boolean gameFinished() {
 
@@ -100,5 +79,35 @@ public class BlackJack {
 
         return false;
     }
+
+
+
+
+
+
+
+
+
+
+    public void shuffleDeck(){
+        deck.shuffle();
+    }
+
+
+    public GameState getGameState() { return gameState; }
+    //public void getCard()
+
+
+    public GameState evaluateGame() {
+        logger.info("Evaluating,...");
+
+        // If not more cards, game is finished
+
+        //TODO: evaluate game
+        return GameState.RUNNING;
+    }
+
+
+
 
 }

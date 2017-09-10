@@ -3,13 +3,16 @@ package org.mitio.game;
 import org.apache.commons.cli.*;
 import org.mitio.game.blackjack.BlackJack;
 import org.mitio.game.blackjack.dto.Cards;
-import org.mitio.game.blackjack.dto.GameState;
-import org.mitio.game.blackjack.dto.Player;
+import org.mitio.game.blackjack.table.Player;
 import org.mitio.game.blackjack.util.CsvCardsParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.File;
-import java.util.UUID;
+
+
+/**
+ * TODO: Add small description about the class
+ */
 
 
 public class BlackJackApp {
@@ -38,23 +41,21 @@ public class BlackJackApp {
             logger.info("loading black jack with deck file: " + deckFile.getName());
             CsvCardsParser csvCardsParser = new CsvCardsParser();
             cards = csvCardsParser.parse(deckFile);
-            blackJack.loadCards(cards);
+            blackJack.setCards(cards);
         }
 
-        final UUID player1Uuid = blackJack.addPlayer("Sam");
-        logger.info("player1uuid: " + player1Uuid);
-
-
-        // Start game
-        // 1) get cards while user is done
-        // 2) let Dealer cards
+        // Add user
+        final Player player = blackJack.addPlayer("Sam");
+        System.out.println("Welcome " + player.getName() + ", hope your luck will have no limits today.");
 
         while(!blackJack.gameFinished()){
+
+            System.out.println("Your cards are: " + player.getCards().toString() + "  (Press space for new card or d for done)");
 
 
             //player1Uuid.takeTurn
 
-            logger.info("asdfasdf");
+            logger.info("running game cycle");
         }
 
         // TODO: blackJack.getScore();

@@ -1,5 +1,7 @@
 package org.mitio.game.blackjack.dto;
 
+import org.mitio.game.blackjack.table.Player;
+
 /**
  * Dealer player
  */
