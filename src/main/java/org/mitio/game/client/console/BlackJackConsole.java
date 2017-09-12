@@ -113,7 +113,7 @@ public class BlackJackConsole {
                 .numberOfArgs(1)
                 .required(false)
                 .type(File.class    )
-                .desc("csv file containing deck of cards")
+                .desc("load deck cards from csv file")
                 .build();
 
         Options options = new Options();
