@@ -5,6 +5,10 @@ import org.mitio.game.blackjack.card.Cards;
 import java.util.UUID;
 
 
+/**
+ * Base Black Jack player class
+ */
+
 public class Player implements PlayerInterface {
 
     private UUID uuid;

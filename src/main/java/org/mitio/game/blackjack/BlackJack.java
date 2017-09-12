@@ -5,7 +5,6 @@ import org.mitio.game.blackjack.card.dto.Card;
 import org.mitio.game.blackjack.player.Player;
 import org.mitio.game.blackjack.common.Rules;
 import org.mitio.game.blackjack.table.Table;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

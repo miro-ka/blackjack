@@ -7,22 +7,11 @@ import static org.junit.Assert.*;
 public class PlayerTest {
     @Test
     public void getName() throws Exception {
-    }
 
-    @Test
-    public void getUuid() throws Exception {
-    }
+        final String playersName = "Hugga Wugga";
+        final Player player = new Player(playersName);
 
-    @Test
-    public void getScore() throws Exception {
-    }
+        assertEquals(player.getName(), playersName);
 
-    @Test
-    public void getCards() throws Exception {
     }
-
-    @Test
-    public void addCard() throws Exception {
-    }
-
 }

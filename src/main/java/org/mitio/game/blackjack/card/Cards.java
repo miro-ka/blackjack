@@ -1,10 +1,13 @@
 package org.mitio.game.blackjack.card;
 
 import org.mitio.game.blackjack.card.dto.Card;
-
 import java.util.Collections;
 import java.util.LinkedList;
 
+
+/**
+ * Playing cards
+ */
 
 public class Cards {
 

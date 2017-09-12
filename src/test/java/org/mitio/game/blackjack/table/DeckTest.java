@@ -1,26 +1,20 @@
 package org.mitio.game.blackjack.table;
 
-import org.junit.Before;
 import org.junit.Test;
-
+import org.mitio.game.blackjack.card.dto.Card;
 import static org.junit.Assert.*;
 
 
 public class DeckTest {
-    @Before
-    public void setUp() throws Exception {
-    }
 
-    @Test
-    public void initializeCards() throws Exception {
-    }
-
-    @Test
-    public void shuffle() throws Exception {
-    }
 
     @Test
     public void getNext() throws Exception {
+
+        Deck deck = new Deck();
+        final Card card = deck.getNext();
+
+        assertNotEquals(card, null);
     }
 
 }

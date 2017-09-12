@@ -13,9 +13,9 @@ Blackjack game
 
 
 ## Quick Start
-Core Library BlackJack should be easy to adapt to any client. As an implementation example you can take a look at console BlackJack implementation.
+Core Library BlackJack should be easy to adapt to any client. As an example you can take a look at console BlackJack implementation.
 
-Start console BlackJack client implementaion
+Start console BlackJack client:
 
 ```
 java -jar blackjack_console.jar
