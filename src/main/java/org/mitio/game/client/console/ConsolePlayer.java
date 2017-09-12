@@ -5,6 +5,7 @@ import org.mitio.game.blackjack.card.Cards;
 import org.mitio.game.blackjack.card.dto.Card;
 import org.mitio.game.blackjack.player.Player;
 import org.mitio.game.blackjack.player.PlayerInterface;
+import org.mitio.game.blackjack.common.Rules;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -16,22 +17,23 @@ import java.util.UUID;
 public class ConsolePlayer implements PlayerInterface{
 
     private Player player;
-    private final int targetScore = 21;
 
 
     public ConsolePlayer(final Player player) {
         this.player = player;
 
-        printCommands();
+        System.out.println("\n\n==============★★★★★★★★★★★★★★★★★★★★★★★★==============");
         System.out.println("Welcome " + player.getName() + ", hope your luck will have no limits today. Good luck!");
-        System.out.println("Your cards: " + player.getCards().toString() + " (score: " + player.getScore() + ")");
+        System.out.println("\nYour cards: " + player.getCards().toString() + " (score: " + player.getScore() + ")");
+        printCommands();
 
     }
 
     private void printCommands() {
-        System.out.println("Controls:");
-        System.out.println("\t Enter - get new card");
-        System.out.println("\t Any other key + Enter - done/finished\n");
+        System.out.println("\n(Press Enter for new card, or any other key + Enter to stop dealing)");
+        // System.out.println("\n you know the rules:");
+        // System.out.println("\t Enter - get new card");
+        // System.out.println("\t Any other key + Enter - done/finished\n");
 
     }
 
@@ -49,8 +51,7 @@ public class ConsolePlayer implements PlayerInterface{
 
     public boolean isDone() {
 
-        if(getScore() > targetScore) {
-            System.out.println(player.getName() + ": Ohh,..crap!");
+        if(getScore() > Rules.MAX_SCORE) {
             return true;
         }
 
@@ -58,11 +59,9 @@ public class ConsolePlayer implements PlayerInterface{
         final String input = keyboard.nextLine();
 
         if(!input.isEmpty()) {
-            System.out.println(player.getName() + ": I'm good");
             return true;
         }
 
-        System.out.println(player.getName() + ": Give me one");
         return false;
     }
 

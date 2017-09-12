@@ -3,8 +3,11 @@ package org.mitio.game.blackjack;
 import org.mitio.game.blackjack.card.Cards;
 import org.mitio.game.blackjack.card.dto.Card;
 import org.mitio.game.blackjack.player.Player;
-import org.mitio.game.blackjack.table.Score;
+import org.mitio.game.blackjack.common.Rules;
 import org.mitio.game.blackjack.table.Table;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -16,7 +19,6 @@ import java.util.UUID;
 public class BlackJack {
 
     private Table table;
-    private Score score = new Score();
 
     public BlackJack(){
         table = new Table();
@@ -47,6 +49,31 @@ public class BlackJack {
     }
 
     public Player getWinner() {
-        return table.getWinner();
+
+        final HashMap<UUID, Player> players = table.getPlayers();
+
+        int maxScore = 0;
+        Player maxScorePlayer = null;
+
+        for(Map.Entry<UUID, Player> entry : players.entrySet()) {
+            final Player player = entry.getValue();
+            final int score = player.getScore();
+
+            if(score > Rules.MAX_SCORE)
+                continue;
+
+            // if player has blackjack (21)
+            if(score == Rules.MAX_SCORE) {
+                return player;
+            }
+
+            if(maxScore < score){
+                maxScore = score;
+                maxScorePlayer = player;
+            }
+        }
+
+        // If nobody has full pot, the winner the one with the highest score
+        return maxScorePlayer;
     }
 }

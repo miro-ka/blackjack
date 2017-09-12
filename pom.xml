@@ -63,7 +63,7 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>test</finalName>
+                    <finalName>blackjack_console</finalName>
                     <archive>
                         <manifest>
                             <mainClass>org.mitio.game.client.console.BlackJackConsole</mainClass>

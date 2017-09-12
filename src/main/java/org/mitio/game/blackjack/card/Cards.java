@@ -54,4 +54,8 @@ public class Cards {
         }
         return score;
     }
+
+    public int size() {
+        return cards.size();
+    }
 }

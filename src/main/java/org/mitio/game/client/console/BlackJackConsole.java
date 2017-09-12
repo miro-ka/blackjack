@@ -5,9 +5,9 @@ import org.mitio.game.blackjack.BlackJack;
 import org.mitio.game.blackjack.card.Cards;
 import org.mitio.game.blackjack.player.Player;
 import org.mitio.game.blackjack.util.CsvCardsParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
 
 
 /**
@@ -17,12 +17,11 @@ import java.io.File;
 
 public class BlackJackConsole {
 
-    private static final Logger logger = LoggerFactory.getLogger(BlackJackConsole.class);
-
-
     public static void main(String[] args) throws ParseException {
 
         printWelcomeScreen();
+
+        // Parse commands
         Options options = buildCommandLineOptions();
         CommandLineParser parser = new DefaultParser();
         CommandLine cmdLine = parser.parse(options, args);
@@ -36,39 +35,55 @@ public class BlackJackConsole {
         Cards cards = null;
         if(cmdLine.hasOption("deck")){
             File deckFile = new File(cmdLine.getOptionValue("deck"));
-            logger.info("loading black jack with deck file: " + deckFile.getName());
             CsvCardsParser csvCardsParser = new CsvCardsParser();
-            cards = csvCardsParser.parse(deckFile);
+            try {
+                cards = csvCardsParser.parse(deckFile);
+            }catch(IOException e){
+                System.out.println(e.getMessage());
+                System.exit(1);
+            }
         }
 
 
-        final BlackJack blackJack = (cards == null) ? new BlackJack() : new BlackJack(cards);
-        final ConsolePlayer playerSam = new ConsolePlayer(blackJack.addPlayer("Sam"));
+        boolean playGame = true;
+        final Scanner keyboard = new Scanner(System.in);
 
-        while(!playerSam.isDone()) {
+        do{
 
-            if(blackJack.gameFinished())
-                break;
+            final BlackJack blackJack = (cards == null) ? new BlackJack() : new BlackJack(cards);
+            final ConsolePlayer playerSam = new ConsolePlayer(blackJack.addPlayer("Sam"));
 
-            playerSam.addCard(blackJack.getCard(playerSam.getUuid()));
-        }
+            while(!playerSam.isDone()) {
+                if(blackJack.gameFinished())
+                    break;
+                playerSam.addCard(blackJack.getCard(playerSam.getUuid()));
+            }
 
-        if(!blackJack.gameFinished())
-            blackJack.dealersTurn(playerSam.getScore());
+            if(!blackJack.gameFinished())
+                blackJack.dealersTurn(playerSam.getScore());
+            final Cards dealersCards = blackJack.getDealersCards();
+            System.out.println("\nDealers cards: " + dealersCards.toString() + "(score: " + dealersCards.getScore() + ")" );
 
-        final Cards dealersCards = blackJack.getDealersCards();
-        System.out.println("Dealers cards: " + dealersCards.toString() + "(score: " + dealersCards.getScore() + ")" );
+            writeScore(blackJack.getWinner());
 
-        System.out.println("\n--------------");
-        System.out.println("--------------");
-        final Player winner = blackJack.getWinner();
+
+            System.out.println("\n\nDo you dare to play one more time? (y/n)");
+            if(keyboard.nextLine().equals("n")) {
+                System.out.println("Alright, thanks for playing,..wish you all the best.");
+                playGame = false;
+            }
+
+        }while(playGame);
+    }
+
+
+    private static void writeScore(final Player winner) {
+        System.out.println("\n==============★★★★★★THE WINNER IS★★★★★==============");
+        System.out.println(  "==============★★★★★★★★★★★★★★★★★★★★★★★★==============");
         if(winner != null)
             System.out.println("The Winner is: " + winner.getName() + ", with score: " + winner.getScore() + "!");
         else
             System.out.println("Nobody wins!");
-
-
-        // TODO do you want to continue?
     }
 
 

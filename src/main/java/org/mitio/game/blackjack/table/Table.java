@@ -3,6 +3,7 @@ package org.mitio.game.blackjack.table;
 import org.mitio.game.blackjack.card.Cards;
 import org.mitio.game.blackjack.card.dto.Card;
 import org.mitio.game.blackjack.player.Player;
+import org.mitio.game.blackjack.common.Rules;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -13,7 +14,6 @@ public class Table {
     private HashMap<UUID, Player> players = new HashMap<>();
     private Deck deck;
     private Player dealer;
-    private final int targetScore = 21;
 
 
     public Table() {
@@ -25,6 +25,8 @@ public class Table {
         deck = new Deck(cards);
         initialize();
     }
+
+    public HashMap<UUID, Player> getPlayers() {  return players;  }
 
     private void initialize() {
         dealer = addPlayer("Mr Dealer");
@@ -44,7 +46,7 @@ public class Table {
 
     public void dealersTurn(final int maxUserScore) {
 
-        while(dealer.getScore() <= maxUserScore && dealer.getScore() < targetScore)
+        while(dealer.getScore() <= maxUserScore && dealer.getScore() < Rules.MAX_SCORE)
             dealer.addCard(deck.getNext());
     }
 
@@ -69,12 +71,12 @@ public class Table {
             final int playersScore = player.getScore();
 
             // if player has blackjack (21)
-            if(playersScore == targetScore) {
+            if(playersScore == Rules.MAX_SCORE) {
                 return true;
             }
 
             // Check if all users don't have all over 21
-            if(everybodyOverLimit && playersScore <= targetScore)
+            if(everybodyOverLimit && playersScore <= Rules.MAX_SCORE)
                 everybodyOverLimit = false;
         }
 
@@ -86,33 +88,5 @@ public class Table {
         }
 
         return false;
-    }
-
-
-    public Player getWinner() {
-
-        int maxScore = 0;
-        Player maxScorePlayer = null;
-
-        for(Map.Entry<UUID, Player> entry : players.entrySet()) {
-            final Player player = entry.getValue();
-            final int score = player.getScore();
-
-            if(score > targetScore)
-                continue;
-
-            // if player has blackjack (21)
-            if(score == targetScore) {
-                return player;
-            }
-
-            if(maxScore < score){
-                maxScore = score;
-                maxScorePlayer = player;
-            }
-        }
-
-        // If nobody has full pot, the winner the one with the highest score
-        return maxScorePlayer;
     }
 }
