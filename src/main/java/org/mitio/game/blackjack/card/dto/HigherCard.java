@@ -1,4 +1,4 @@
-package org.mitio.game.blackjack.dto;
+package org.mitio.game.blackjack.card.dto;
 
 
 public enum HigherCard {

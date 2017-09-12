@@ -1,9 +1,9 @@
-package org.mitio.game;
+package org.mitio.game.client.console;
 
 import org.apache.commons.cli.*;
 import org.mitio.game.blackjack.BlackJack;
-import org.mitio.game.blackjack.dto.Cards;
-import org.mitio.game.blackjack.table.Player;
+import org.mitio.game.blackjack.card.Cards;
+import org.mitio.game.blackjack.player.Player;
 import org.mitio.game.blackjack.util.CsvCardsParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,13 +11,13 @@ import java.io.File;
 
 
 /**
- * TODO: Add small description about the class
+ * Console application game implementing BlackJack game
  */
 
 
-public class BlackJackApp {
+public class BlackJackConsole {
 
-    private static final Logger logger = LoggerFactory.getLogger(BlackJackApp.class);
+    private static final Logger logger = LoggerFactory.getLogger(BlackJackConsole.class);
 
 
     public static void main(String[] args) throws ParseException {
@@ -33,33 +33,42 @@ public class BlackJackApp {
             return;
         }
 
-
-        BlackJack blackJack = new BlackJack();
-        Cards cards;
+        Cards cards = null;
         if(cmdLine.hasOption("deck")){
             File deckFile = new File(cmdLine.getOptionValue("deck"));
             logger.info("loading black jack with deck file: " + deckFile.getName());
             CsvCardsParser csvCardsParser = new CsvCardsParser();
             cards = csvCardsParser.parse(deckFile);
-            blackJack.setCards(cards);
         }
 
-        // Add user
-        final Player player = blackJack.addPlayer("Sam");
-        System.out.println("Welcome " + player.getName() + ", hope your luck will have no limits today.");
 
-        while(!blackJack.gameFinished()){
+        final BlackJack blackJack = (cards == null) ? new BlackJack() : new BlackJack(cards);
+        final ConsolePlayer playerSam = new ConsolePlayer(blackJack.addPlayer("Sam"));
 
-            System.out.println("Your cards are: " + player.getCards().toString() + "  (Press space for new card or d for done)");
+        while(!playerSam.isDone()) {
 
+            if(blackJack.gameFinished())
+                break;
 
-            //player1Uuid.takeTurn
-
-            logger.info("running game cycle");
+            playerSam.addCard(blackJack.getCard(playerSam.getUuid()));
         }
 
-        // TODO: blackJack.getScore();
+        if(!blackJack.gameFinished())
+            blackJack.dealersTurn(playerSam.getScore());
 
+        final Cards dealersCards = blackJack.getDealersCards();
+        System.out.println("Dealers cards: " + dealersCards.toString() + "(score: " + dealersCards.getScore() + ")" );
+
+        System.out.println("\n--------------");
+        System.out.println("--------------");
+        final Player winner = blackJack.getWinner();
+        if(winner != null)
+            System.out.println("The Winner is: " + winner.getName() + ", with score: " + winner.getScore() + "!");
+        else
+            System.out.println("Nobody wins!");
+
+
+        // TODO do you want to continue?
     }
 
 

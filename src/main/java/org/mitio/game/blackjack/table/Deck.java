@@ -1,8 +1,11 @@
 package org.mitio.game.blackjack.table;
 
-import org.mitio.game.blackjack.dto.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mitio.game.blackjack.card.*;
+import org.mitio.game.blackjack.card.dto.Card;
+import org.mitio.game.blackjack.card.dto.CardSymbol;
+import org.mitio.game.blackjack.card.dto.CardValue;
+import org.mitio.game.blackjack.card.dto.HigherCard;
+
 
 /**
  * Deck of cards
@@ -10,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 public class Deck{
 
-    private static final Logger logger = LoggerFactory.getLogger(Deck.class);
     private Cards cards;
 
     public Deck(){

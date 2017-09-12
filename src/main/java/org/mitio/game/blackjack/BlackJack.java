@@ -1,11 +1,11 @@
 package org.mitio.game.blackjack;
 
-import org.mitio.game.blackjack.dto.*;
-import org.mitio.game.blackjack.table.Deck;
-import org.mitio.game.blackjack.table.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import java.util.*;
+import org.mitio.game.blackjack.card.Cards;
+import org.mitio.game.blackjack.card.dto.Card;
+import org.mitio.game.blackjack.player.Player;
+import org.mitio.game.blackjack.table.Score;
+import org.mitio.game.blackjack.table.Table;
+import java.util.UUID;
 
 
 /**
@@ -15,99 +15,38 @@ import java.util.*;
 
 public class BlackJack {
 
-    private static final Logger logger = LoggerFactory.getLogger(BlackJack.class);
-    private Dealer dealer;
-    private HashMap<UUID, Player> players = new HashMap<>();
-    private GameState gameState = GameState.RUNNING;
-    private Deck deck = new Deck();
-    private final String dealersName = "Mr. Dealer";
-
+    private Table table;
+    private Score score = new Score();
 
     public BlackJack(){
-        dealer = new Dealer(dealersName);
-        dealer.addCard(deck.getNext());
-        dealer.addCard(deck.getNext());
+        table = new Table();
+    }
+    public BlackJack(final Cards cards) {
+        table = new Table(cards);
     }
 
     public Player addPlayer(final String playersName){
-        Player newPlayer = new Player(playersName);
-        newPlayer.addCard(deck.getNext());
-        newPlayer.addCard(deck.getNext());
-
-        players.put(newPlayer.getUuid(), newPlayer);
-
-        return newPlayer;
-    }
-
-    public void setCards(final Cards cards){
-        deck = new Deck(cards);
-    }
-
-    public Card handOutCardToUser(final UUID uuid) {
-        final Card card = deck.getNext();
-        players.get(uuid).addCard(card);
-        return card;
+        final Player player = table.addPlayer(playersName);
+        return new Player(player);
     }
 
     public boolean gameFinished() {
-
-        boolean everybodyOverLimit = true;
-
-        for(Map.Entry<UUID, Player> entry : players.entrySet()) {
-            final Player player = entry.getValue();
-
-            final int playersScore = player.getScore();
-
-            // if player has blackjack (21)
-            if(playersScore == 21) {
-                gameState = GameState.WE_HAVE_WINNER;
-                return true;
-            }
-
-            // Check if all users don't have all over 21
-            if(everybodyOverLimit && playersScore <= 21)
-                everybodyOverLimit = false;
-        }
-
-        if(everybodyOverLimit)
-            return true;
-
-        if(deck.isEmpty()) {
-            gameState = GameState.NO_MORE_CARDS;
-            return true;
-        }
-
-        return false;
+        return table.gameFinished();
     }
 
-
-
-
-
-
-
-
-
-
-    public void shuffleDeck(){
-        deck.shuffle();
+    public Card getCard(final UUID userId) {
+        return table.getCard(userId);
     }
 
-
-    public GameState getGameState() { return gameState; }
-    //public void getCard()
-
-
-    public GameState evaluateGame() {
-        logger.info("Evaluating,...");
-
-        // If not more cards, game is finished
-
-        //TODO: evaluate game
-        return GameState.RUNNING;
+    public void dealersTurn(final int maxScore) {
+        table.dealersTurn(maxScore);
     }
 
+    public Cards getDealersCards() {
+        return table.getDealersCards();
+    }
 
-
-
+    public Player getWinner() {
+        return table.getWinner();
+    }
 }
