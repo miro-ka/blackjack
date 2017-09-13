@@ -35,7 +35,7 @@ __________.__                 __          ____.              __
 
 usage: Black Jack
  -d,--deck <arg>   csv file containing deck of cards
- -h,--help         load deck cards from csv file
+ -h,--help         shows help
 
 ```
 
